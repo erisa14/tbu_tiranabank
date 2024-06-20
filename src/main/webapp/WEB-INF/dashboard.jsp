@@ -12,6 +12,8 @@
     <a href="/logout">Logout</a>
     <a href="/createAccountView">Create Account</a>
     <a href="/createTransactionView">Create Transaction</a>
+    <a href="/userAccounts">Your Accounts</a>
+
 </div>
 </body>
 </html>

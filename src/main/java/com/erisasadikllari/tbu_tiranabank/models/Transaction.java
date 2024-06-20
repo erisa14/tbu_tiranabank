@@ -24,8 +24,8 @@ public class Transaction {
     private long id;
 
     @NotBlank
-    @Size(min = 12, max = 12, message = "Account must contain 10 characters!")
-    private String credit_account;
+    @Size(min = 12, max = 12, message = "Account must contain 12 characters!")
+    private String creditAccount;
 
     @NotBlank
     @Size(min = 10, max = 200, message = "Description must contain at least 10 characters!")
@@ -36,11 +36,11 @@ public class Transaction {
 
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date transaction_date;
+    private String transactionDate;
 
     @PrePersist
     protected void onCreate() {
-        this.transaction_date = new Date();
+        this.transactionDate = String.valueOf(new Date());
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

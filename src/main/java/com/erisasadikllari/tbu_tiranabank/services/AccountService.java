@@ -19,11 +19,6 @@ public class AccountService {
     @Autowired
     private CustomerRepository customerRepository;
 
-
-    public List<Account> getAllAccounts(){
-        return accountRepository.findAll();
-    }
-
     public List<Account> getAllAccountsByCustomerId(Long customerId){
         return accountRepository.findAllByCustomer_Id(customerId);
     }
@@ -43,5 +38,10 @@ public class AccountService {
             accountNumber.append(digit);
         }
         return accountNumber.toString();
+    }
+
+    public Account getById(Long id){
+        Optional<Account> account=accountRepository.findById(id);
+        return account.orElse(null);
     }
 }
