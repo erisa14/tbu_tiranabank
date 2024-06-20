@@ -20,7 +20,7 @@
         <td>
         <a href="/account/${account.id}/details">Get Account Details</a> </td>
         <td>
-            <a href="/account/${account.id}/transactions">Get Account Transaction</a> </td>
+            <a href="/accountTransactions/${account.id}">Get Account Transaction</a> </td>
 
 
     </tr>

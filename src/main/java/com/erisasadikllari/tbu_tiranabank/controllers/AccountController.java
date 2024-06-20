@@ -72,9 +72,38 @@ public class AccountController {
         List<Transaction> transactionsDebit = transactionService.getAllTransactionsByDebitAccountId(id);
         List<Transaction> transactionsCredit = transactionService.getAllTransactionsByCreditAccountNumber(account.getAccountNumber());
 
-                model.addAttribute("account", account);
-                model.addAttribute("transactionsDebit", transactionsDebit);
-                model.addAttribute("transactionsCredit", transactionsCredit);
-                return "accountDetails";
+        model.addAttribute("account", account);
+        model.addAttribute("transactionsDebit", transactionsDebit);
+        model.addAttribute("transactionsCredit", transactionsCredit);
+        return "accountDetails";
+    }
+
+
+    @GetMapping("/accountTransactions/{id}")
+    public String getTransaction(@PathVariable("id") Long id, HttpSession session, Model model){
+        if (session.getAttribute("loggedInCustomerId") == null) {
+            return "redirect:/logout";
+        }
+        Account account = accountService.getById(id);
+        model.addAttribute("account", account);
+        return "accountTransactions";
+    }
+
+    @GetMapping("/accountTransactions/{id}/dateBetween")
+    public String getTransactionDateBetween(@PathVariable("id") Long id,
+                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                            HttpSession session, Model model){
+        if (session.getAttribute("loggedInCustomerId") == null) {
+            return "redirect:/logout";
+        }
+        Account account=accountService.getById(id);
+        String accountNumber=account.getAccountNumber();
+        List<Transaction> transactionDebit=transactionService.getAllTransactionsByDebitIdBetweenDate(id,startDate,endDate);
+        List<Transaction> transactionCredit=transactionService.getAllTransactionsByCreditIdBetweenDate(accountNumber,startDate,endDate);
+        model.addAttribute("transactionDebit", transactionDebit);
+        model.addAttribute("transactionCredit", transactionCredit);
+        model.addAttribute("account", account);
+        return "accountTransactions";
     }
 }

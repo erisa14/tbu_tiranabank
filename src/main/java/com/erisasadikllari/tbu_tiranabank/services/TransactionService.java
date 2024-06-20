@@ -32,6 +32,10 @@ public class TransactionService {
         Account creditAccount=creditAccountOpt.get();
         Account debitAccount=account.get();
 
+        if (debitAccount.getAccountNumber().equals(creditAccount.getAccountNumber())){
+            throw new IllegalArgumentException("You can not do transactions at the same Debit and Credit Account!");
+        }
+
         if (!debitAccount.getCurrency().equals(creditAccount.getCurrency())){
             throw new IllegalArgumentException("Debit and Credit Account must have the same currency!");
         }
@@ -65,7 +69,11 @@ public class TransactionService {
     }
 
 
-    public List<Transaction> getAllTransactionsBetweenDate(Date startDate, Date endDate){
-        return transactionRepository.findAllByTransactionDateBetween(startDate, endDate);
+    public List<Transaction> getAllTransactionsByDebitIdBetweenDate(Long id,Date startDate, Date endDate){
+        return transactionRepository.findTransactionsByDebitAccountIdAndTransactionDateBetween(id, startDate,endDate);
+    }
+
+    public List<Transaction> getAllTransactionsByCreditIdBetweenDate(String accountNumber,Date startDate, Date endDate){
+        return transactionRepository.findTransactionsByCreditAccountAndTransactionDateBetween(accountNumber, startDate,endDate);
     }
 }

@@ -51,6 +51,4 @@ public class TransactionController {
             return "createTransaction";
         }
     }
-
-
 }

@@ -13,5 +13,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 
     List<Transaction> findAllByCreditAccountContains(String creditAccountNumber);
 
-    List<Transaction> findAllByTransactionDateBetween(Date startDate, Date endDate);
+    List<Transaction> findTransactionsByDebitAccountIdAndTransactionDateBetween(Long id, Date startDate, Date endDate);
+    List<Transaction> findTransactionsByCreditAccountAndTransactionDateBetween(String accountNumber, Date startDate, Date endDate);
 }
