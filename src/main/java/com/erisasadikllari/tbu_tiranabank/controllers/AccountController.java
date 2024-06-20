@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -74,17 +76,5 @@ public class AccountController {
                 model.addAttribute("transactionsDebit", transactionsDebit);
                 model.addAttribute("transactionsCredit", transactionsCredit);
                 return "accountDetails";
-    }
-
-    @GetMapping("/account/{id}/transactions")
-    public String getAccountTransactions(@PathVariable("id") Long id,  String startDate,  String endDate, HttpSession session, Model model) {
-        if (session.getAttribute("loggedInCustomerId") == null) {
-            return "redirect:/logout";
-        }
-        Account account = accountService.getById(id);
-        List<Transaction> transactionList=transactionService.getAllTransactionsBetweenDate(startDate, endDate);
-        model.addAttribute("transactionList", transactionList);
-        model.addAttribute("account", account);
-        return "accountTransactions";
     }
 }

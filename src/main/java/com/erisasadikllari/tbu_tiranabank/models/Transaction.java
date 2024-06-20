@@ -36,11 +36,11 @@ public class Transaction {
 
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String transactionDate;
+    private Date transactionDate;
 
     @PrePersist
     protected void onCreate() {
-        this.transactionDate = String.valueOf(new Date());
+        this.transactionDate = new Date();
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

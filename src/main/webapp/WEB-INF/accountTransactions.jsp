@@ -10,10 +10,10 @@
 
 <form action="/account/${account.id}/transactions" method="get">
     <label for="startDate">Start Date:</label>
-    <input type="date" id="startDate" name="startDate" required><br>
+    <input type="Date" id="startDate" name="startDate" required><br>
 
     <label for="endDate">End Date:</label>
-    <input type="date" id="endDate" name="endDate" required><br>
+    <input type="Date" id="endDate" name="endDate" required><br>
 
     <button type="submit">Submit</button>
 </form>

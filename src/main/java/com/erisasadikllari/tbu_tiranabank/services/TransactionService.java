@@ -65,7 +65,7 @@ public class TransactionService {
     }
 
 
-    public List<Transaction> getAllTransactionsBetweenDate(String startDate, String endDate){
+    public List<Transaction> getAllTransactionsBetweenDate(Date startDate, Date endDate){
         return transactionRepository.findAllByTransactionDateBetween(startDate, endDate);
     }
 }
