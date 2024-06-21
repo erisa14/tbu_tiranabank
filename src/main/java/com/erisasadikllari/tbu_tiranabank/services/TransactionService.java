@@ -5,11 +5,18 @@ import com.erisasadikllari.tbu_tiranabank.models.AccountType;
 import com.erisasadikllari.tbu_tiranabank.models.Transaction;
 import com.erisasadikllari.tbu_tiranabank.repositories.AccountRepository;
 import com.erisasadikllari.tbu_tiranabank.repositories.TransactionRepository;
-import jakarta.transaction.Transactional;
-import lombok.Data;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -75,5 +82,196 @@ public class TransactionService {
 
     public List<Transaction> getAllTransactionsByCreditIdBetweenDate(String accountNumber,Date startDate, Date endDate){
         return transactionRepository.findTransactionsByCreditAccountAndTransactionDateBetween(accountNumber, startDate,endDate);
+    }
+
+//    public byte[] generatePDF() throws IOException {
+//        List<Transaction> transactions = transactionRepository.findAll(); // Adjust based on your repository method
+//
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        PDDocument pdfDocument = new PDDocument();
+//
+//        try {
+//            PDPage page = new PDPage();
+//            pdfDocument.addPage(page);
+//
+//            PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, page);
+//            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+//            contentStream.beginText();
+//            contentStream.newLineAtOffset(100, 700);
+//
+//            for (Transaction transaction : transactions) {
+//                contentStream.showText("Transaction ID: " + transaction.getId());
+//                contentStream.newLine();
+//                contentStream.showText("Amount: " + transaction.getAmount());
+//                contentStream.newLine();
+//                contentStream.newLineAtOffset(60, -40);
+//            }
+//
+//            contentStream.endText();
+//            contentStream.close();
+//
+//            pdfDocument.save(baos);
+//            pdfDocument.close();
+//
+//            return baos.toByteArray();
+//        } finally {
+//            if (pdfDocument != null) {
+//                pdfDocument.close();
+//            }
+//            if (baos != null) {
+//                baos.close();
+//            }
+//        }
+//    }
+public byte[] generatePDF() throws IOException {
+    List<Transaction> transactions = transactionRepository.findAll(); // Adjust based on your repository method
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PDDocument pdfDocument = new PDDocument();
+
+    try {
+        PDPage page = new PDPage();
+        pdfDocument.addPage(page);
+
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, page);
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+
+        float margin = 20;
+        float yStart = page.getMediaBox().getHeight() - margin;
+        float yPosition = yStart;
+        float bottomMargin = 70;
+        float cellMargin = 10f;
+        float fontSize = 12f;
+
+        float tableWidth = page.getMediaBox().getWidth() - 2 * margin;
+        float[] columnWidths = {tableWidth * 0.20f, tableWidth * 0.25f, tableWidth * 0.2f, tableWidth * 0.2f, tableWidth * 0.15f};
+
+        drawTableHeader(contentStream, yPosition, margin, fontSize, columnWidths);
+        yPosition -= fontSize + cellMargin;
+
+        for (Transaction transaction : transactions) {
+            drawTableRow(contentStream, transaction, yPosition, margin, fontSize, columnWidths);
+            yPosition -= fontSize + cellMargin;
+        }
+
+        contentStream.close();
+
+        pdfDocument.save(baos);
+        pdfDocument.close();
+
+        return baos.toByteArray();
+    } finally {
+        if (pdfDocument != null) {
+            pdfDocument.close();
+        }
+        if (baos != null) {
+            baos.close();
+        }
+    }
+}
+
+    private void drawTableHeader(PDPageContentStream contentStream, float yPosition, float margin, float fontSize, float[] columnWidths) throws IOException {
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, fontSize);
+        contentStream.beginText();
+        contentStream.newLineAtOffset(margin, yPosition);
+
+        String[] headers = {"Transaction Date", "Description", "Debit Account", "Credit Account", "Amount"};
+        float currentX = margin;
+
+        for (int i = 0; i < headers.length; i++) {
+            contentStream.showText(headers[i]);
+            currentX += columnWidths[i];
+            contentStream.newLineAtOffset(columnWidths[i], 0);
+        }
+
+        contentStream.endText();
+    }
+
+    private void drawTableRow(PDPageContentStream contentStream, Transaction transaction, float yPosition, float margin, float fontSize, float[] columnWidths) throws IOException {
+        contentStream.setFont(PDType1Font.HELVETICA, fontSize);
+
+        float rowHeight = fontSize + 2;
+        int maxRowsPerCell = 10;
+
+        float currentY = yPosition;
+        float currentX = margin;
+
+        String[] rowData = {
+                String.valueOf(transaction.getTransactionDate()),
+                String.valueOf(transaction.getDescription()),
+                String.valueOf(transaction.getDebitAccount().getAccountNumber()),
+                String.valueOf(transaction.getCreditAccount()),
+                String.valueOf(transaction.getAmount())
+        };
+
+        for (int i = 0; i < rowData.length; i++) {
+            String cellContent = rowData[i];
+            List<String> lines = splitTextToFit(cellContent, columnWidths[i]);
+
+            for (String line : lines) {
+                contentStream.beginText();
+                contentStream.setFont(PDType1Font.HELVETICA, fontSize);
+                contentStream.newLineAtOffset(currentX, currentY);
+                contentStream.showText(line);
+                contentStream.endText();
+                currentY -= rowHeight;
+            }
+
+            currentX += columnWidths[i];
+            currentY = yPosition;
+        }
+    }
+
+    private List<String> splitTextToFit(String text, float maxWidth) throws IOException {
+        List<String> lines = new ArrayList<>();
+        int lastSpace = -1;
+
+        while (text.length() > 0) {
+            int spaceIndex = text.indexOf(' ', lastSpace + 1);
+            if (spaceIndex < 0)
+                spaceIndex = text.length();
+
+            String subString = text.substring(0, spaceIndex);
+            float stringWidth = PDType1Font.HELVETICA.getStringWidth(subString) / 1000 * 12;
+
+            if (stringWidth > maxWidth) {
+                if (lastSpace < 0)
+                    lastSpace = spaceIndex;
+                subString = text.substring(0, lastSpace);
+                lines.add(subString);
+                text = text.substring(lastSpace).trim();
+                lastSpace = -1;
+            } else if (spaceIndex == text.length()) {
+                lines.add(text);
+                text = "";
+            } else {
+                lastSpace = spaceIndex;
+            }
+        }
+
+        return lines;
+    }
+    public byte[] generateCSV() throws IOException {
+        List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             OutputStreamWriter writer = new OutputStreamWriter(baos)) {
+
+            writer.append("Transaction Date ");
+            writer.append("Description  ");
+            writer.append(" Debit Account  ");
+            writer.append(" Credit Account  ");
+            writer.append("Amount\n");
+
+            for (Transaction transaction : transactions) {
+                writer.append(String.valueOf(transaction.getTransactionDate())).append(",");
+                writer.append(String.valueOf(transaction.getDescription())).append(",");
+                writer.append(String.valueOf(transaction.getDebitAccount().getAccountNumber())).append(",");
+                writer.append(String.valueOf(transaction.getCreditAccount())).append(",");
+                writer.append(String.valueOf(transaction.getAmount())).append(",");
+                writer.append("\n");
+            }
+            writer.flush();
+            return baos.toByteArray();
+        }
     }
 }

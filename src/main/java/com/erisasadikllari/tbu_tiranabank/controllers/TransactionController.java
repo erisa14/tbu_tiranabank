@@ -4,6 +4,7 @@ import com.erisasadikllari.tbu_tiranabank.models.Account;
 import com.erisasadikllari.tbu_tiranabank.models.Transaction;
 import com.erisasadikllari.tbu_tiranabank.services.AccountService;
 import com.erisasadikllari.tbu_tiranabank.services.TransactionService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -50,5 +52,21 @@ public class TransactionController {
             model.addAttribute("transactionError", e.getMessage());
             return "createTransaction";
         }
+    }
+
+    @GetMapping("/download/pdf")
+    public void downloadTransactionsPDF(HttpServletResponse response) throws IOException {
+        byte[] pdfBytes = transactionService.generatePDF();
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=transactions.pdf");
+        response.getOutputStream().write(pdfBytes);
+    }
+
+    @GetMapping("/download/csv")
+    public void downloadTransactionsCSV(HttpServletResponse response) throws IOException {
+        byte[] csvBytes = transactionService.generateCSV();
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=transactions.csv");
+        response.getOutputStream().write(csvBytes);
     }
 }
