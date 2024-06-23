@@ -64,16 +64,16 @@ public class Customer {
     @OneToMany(mappedBy="customer", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private List<Account> customer_accounts;
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ",lastname"+lastname+'\''+
-                ", email='" + email + '\'' +
-                ", personalNr='" + personalNr + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Customer{" +
+//                "id=" + id +
+//                ", firstname='" + firstname + '\'' +
+//                ",lastname"+lastname+'\''+
+//                ", email='" + email + '\'' +
+//                ", personalNr='" + personalNr + '\'' +
+//                ", password='" + password + '\'' +
+//                '}';
+//    }
 
 }

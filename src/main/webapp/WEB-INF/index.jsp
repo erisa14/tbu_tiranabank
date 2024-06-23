@@ -7,71 +7,96 @@
 <html>
 <head>
   <title>Login/Register</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 </head>
-<body class="mx-auto">
-<div class="container">
-  <h1 class="text-center">User Authentication</h1>
-  <div class="d-flex justify-content-center gap-5 mt-3">
-    <div class="p-5">
-      <h3>Register</h3>
-      <form:form modelAttribute="newCustomer" action="/register" method="post" class="form gap-3 d-flex flex-column">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="firstname" class="errors text-danger"/>
-          <form:label path="firstname">Name</form:label>
-          <form:input path="firstname" type="text" class="form-control"/>
-
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="lastname" class="errors text-danger"/>
-          <form:label path="lastname">Lastname</form:label>
-          <form:input path="lastname" type="text" class="form-control"/>
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="personalNr" class="errors text-danger"/>
-          <form:label path="personalNr">Personal Number</form:label>
-          <form:input path="personalNr" type="text" class="form-control"/>
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="email" class="errors text-danger"/>
-          <form:label path="email">Email</form:label>
-          <form:input path="email" type="text" class="form-control"/>
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="password" class="errors text-danger"/>
-          <form:label path="password">Password</form:label>
-          <form:input path="password" type="password" class="form-control"/>
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="confirm" class="errors text-danger"/>
-          <form:label path="confirm">Confirm Password</form:label>
-          <form:input path="confirm" type="password" class="form-control"/>
-        </div>
-        <input class="w-50 btn btn-primary" type="submit" value="Submit">
-      </form:form>
-    </div>
-    <div class="p-5">
-      <h3>Login</h3>
-      <form:form modelAttribute="newLogin" action="/login" method="post" class="form gap-3 d-flex flex-column">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:errors path="personalNr" class="errors text-danger"/>
-          <form:label path="personalNr">Personal Number</form:label>
-          <form:input path="personalNr" type="text" class="form-control"/>
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <form:label path="password">Password</form:label>
-          <form:input path="password" type="password" class="form-control"/>
-          <form:errors path="password" class="errors text-danger"/>
-        </div>
-        <input class="w-50 btn btn-primary" type="submit" value="Submit">
-      </form:form>
-    </div>
+<body class="mx-auto container-sm" style="background-color: #021c4f">
+<div class="mt-5">
+  <div class="d-flex ">
+    <a class="btn text-dark btn-lg" style="background-color: #f4ba20"  role="button" id="loginLink">
+      Login
+    </a>
+    <a class="btn btn-lg text-dark" style="background-color: ghostwhite" role="button" id="registerLink">
+      Register
+    </a>
   </div>
-</div>
+    <div class="p-5 collapse rounded" style="width: 40%" id="collapseRegister">
+      <h3 class="text-light">Register</h3>
+      <form:form modelAttribute="newCustomer" action="/register" method="post" class="form gap-3 d-flex flex-column">
+        <div class="form-floating d-flex flex-column justify-content-center align-items-center gap-2">
+          <form:input path="firstname" id="firstname" type="text" class="form-control" placeholder="Firstname"/>
+          <form:label path="firstname" for="firstname">Firstname</form:label>
+          <form:errors path="firstname" class="errors text-danger"/>
+        </div>
+        <div class="form-floating d-flex flex-column justify-content-center align-items-center">
+          <form:input path="lastname" id="lastname" type="text" class="form-control" placeholder="Lastname"/>
+          <form:label path="lastname" for="lastname">Lastname</form:label>
+          <form:errors path="lastname" class="errors text-danger"/>
+        </div>
+        <div class="form-floating d-flex flex-column justify-content-center align-items-center">
+          <form:input path="personalNr" id="personalNr" type="text" class="form-control" placeholder="Personal Number"/>
+          <form:label path="personalNr" for="personalNr">Personal Number</form:label>
+          <form:errors path="personalNr" class="errors text-danger"/>
+        </div>
+        <div class=" form-floating d-flex flex-column justify-content-center align-items-center gap-2">
+          <form:input path="email" id="email" type="text" class="form-control" placeholder="Email"/>
+          <form:label path="email" for="email">Email</form:label>
+          <form:errors path="email" class="errors text-danger"/>
+        </div>
+        <div class="form-floating d-flex flex-column justify-content-center align-items-center gap-2">
+          <form:input path="password" id="password" type="password" class="form-control" placeholder="Password"/>
+          <form:label path="password" for="password">Password</form:label>
+          <form:errors path="password" class="errors text-danger"/>
+        </div>
+        <div class="form-floating d-flex flex-column align-items-center gap-2">
+          <form:input path="confirm" id="confirm" type="password" class="form-control" placeholder="Confirm Password"/>
+          <form:label path="confirm" for="confirm">Confirm Password</form:label>
+          <form:errors path="confirm" class="errors text-danger"/>
+        </div>
+        <input class="col-5 btn btn-primary" type="submit" value="Submit">
+      </form:form>
+    </div>
 
-</div>
+    </div>
 
 
+    <div class="p-5 rounded" style="width: 40%" id="collapseLogin">
+      <h3 class="text-light">Login</h3>
+      <form:form modelAttribute="newLogin" action="/login" method="post" class="form gap-3 d-flex flex-column">
+        <div class="form-floating d-flex flex-column justify-content-center align-items-center gap-2">
+          <form:input path="personalNr" id="personal_nr" type="text" class="form-control" placeholder="Personal Number"/>
+          <form:label path="personalNr" for="personal_nr">Personal Number</form:label>
+          <form:errors path="personalNr" class="errors text-danger"/>
+        </div>
+        <div class="form-floating d-flex flex-column justify-content-center align-items-center gap-2">
+          <form:input path="password" id="login-pass" type="password" class="form-control" placeholder="Password"/>
+          <form:label path="password" for="login-pass">Password</form:label>
+          <form:errors path="password" class="errors text-danger"/>
+        </div>
+        <input class="col-5 btn btn-primary" type="submit" value="Submit">
+      </form:form>
+    </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var loginCollapse = new bootstrap.Collapse(document.getElementById('collapseLogin'), {
+        toggle: true
+      });
 
+      var registerCollapse = new bootstrap.Collapse(document.getElementById('collapseRegister'), {
+        toggle: false
+      });
+
+      document.getElementById('loginLink').addEventListener('click', function() {
+        loginCollapse.show();
+        registerCollapse.hide();
+      });
+
+      document.getElementById('registerLink').addEventListener('click', function() {
+        registerCollapse.show();
+        loginCollapse.hide();
+      });
+    });
+  </script>
 </body>
 </html>

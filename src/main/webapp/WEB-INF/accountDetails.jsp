@@ -4,26 +4,29 @@
 <html>
 <head>
     <title>Account Detail</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 </head>
-<body>
-<table class="table table-striped">
+<body  style="background-color: #183c7c">
+<jsp:include page="navbar.jsp" />
+<h2 class="text-center fs-3 mt-3" style="color:#f4ba20">Details of Account: ${account.accountNumber} </h2>
+<table class="table table-striped border w-75 mt-5 mx-auto bd-white p-5" style="border-color: #f4ba20!important; border-width: 12px!important;">
     <thead>
-    <tr>
-        <th scope="col">Account Number</th>
-        <th scope="col">Transaction Date</th>
-        <th scope="col">Transaction Description</th>
-        <th scope="col">Transaction Debit</th>
-        <th scope="col">Transaction Credit</th>
-        <th scope="col">Transaction Amount</th>
-        <th scope="col">Balance</th>
-        <th scope="col">Currency</th>
+    <tr class="px-4">
+        <th>Transaction Date</th>
+        <th>Transaction Description</th>
+        <th>Transaction Debit</th>
+        <th>Transaction Credit</th>
+        <th>Transaction Amount</th>
+        <th>Balance</th>
+        <th>Currency</th>
     </tr>
     </thead>
     <tbody>
     <c:forEach items="${transactionsDebit}" var="transaction">
-        <tr>
-            <td>${account.accountNumber}</td>
-                <td>${transaction.transactionDate}</td>
+        <tr class="px-4">
+            <td>${transaction.transactionDate.date}/${transaction.transactionDate.month+1}/${transaction.transactionDate.year+1900}</td>
                 <td>${transaction.description}</td>
                 <td>${transaction.debitAccount.accountNumber}</td>
                 <td>${transaction.creditAccount}</td>
@@ -35,7 +38,6 @@
 
     <c:forEach items="${transactionsCredit}" var="transaction">
         <tr>
-            <td>${account.accountNumber}</td>
             <td>${transaction.transactionDate}</td>
             <td>${transaction.description}</td>
             <td>${transaction.debitAccount.accountNumber}</td>
@@ -48,8 +50,8 @@
 
     </tbody>
 </table>
-
-
-
+<footer>
+    <jsp:include page="footer.jsp"/>
+</footer>
 </body>
 </html>

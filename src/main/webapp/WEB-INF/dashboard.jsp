@@ -5,15 +5,15 @@
 <head>
     <title>Dashboard</title>
 </head>
-<body>
-<div class="container">
-<%--    <h1>Welcome ${user.userName}!</h1>--%>
-    <p>This is your dashboard. Nothing to see here yet.</p>
-    <a href="/logout">Logout</a>
-    <a href="/createAccountView">Create Account</a>
-    <a href="/createTransactionView">Create Transaction</a>
-    <a href="/userAccounts">Your Accounts</a>
+<body style="background-color: #183c7c">
+<jsp:include page="navbar.jsp"/>
 
+<div class="mx-auto mt-5">
+    <h4 class="text-center" style="color: #f4ba20">Welcome, ${user.firstname} ${user.lastname}</h4>
+    <h1 class="text-center fw-bold" style="color: #f4ba20">Get started with your Bank Experience!</h1>
 </div>
+<footer>
+    <jsp:include page="footer.jsp"/>
+</footer>
 </body>
 </html>

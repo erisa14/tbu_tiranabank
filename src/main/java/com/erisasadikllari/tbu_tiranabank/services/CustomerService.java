@@ -19,15 +19,12 @@ public class CustomerService {
 
     public Customer register(Customer newCustomer, BindingResult result){
         Optional<Customer> potentionalUser=this.customerRepository.findByPersonalNr(newCustomer.getPersonalNr());
-        //Personal number taken
         if (potentionalUser.isPresent()){
             result.rejectValue("email", "PersonalNumberRegistered", "Personal number is already in use!");
         }
-        //Password doesn't match confirmation
         if (!newCustomer.getPassword().equals(newCustomer.getConfirm())){
             result.rejectValue("confirm", "Matches", "The Confirm Password must match Password!");
         }
-        //Return null if result has errors
         if (result.hasErrors()){
             return null;
         }
@@ -42,13 +39,11 @@ public class CustomerService {
     public Customer login(LoginCustomer newLogin, BindingResult result){
         Optional<Customer> potentionalUser=this.customerRepository.findByPersonalNr(newLogin.getPersonalNr());
 
-        //User doesn't exist
         if (!potentionalUser.isPresent()){
-            result.rejectValue("email", "EmailNotFound", "No user found with that email address");
+            result.rejectValue("personalNr", "PersonalNumberNotFound", "No customer found with that personal number!");
         }
         else {
             if (!BCrypt.checkpw(newLogin.getPassword(), potentionalUser.get().getPassword())){
-                //BCrypt password match fails
                 result.rejectValue("password", "Matches", "Invalid password");
             }
         }

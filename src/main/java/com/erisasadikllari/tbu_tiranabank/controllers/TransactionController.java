@@ -4,18 +4,23 @@ import com.erisasadikllari.tbu_tiranabank.models.Account;
 import com.erisasadikllari.tbu_tiranabank.models.Transaction;
 import com.erisasadikllari.tbu_tiranabank.services.AccountService;
 import com.erisasadikllari.tbu_tiranabank.services.TransactionService;
+import com.opencsv.CSVWriter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -54,19 +59,34 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/download/pdf")
-    public void downloadTransactionsPDF(HttpServletResponse response) throws IOException {
-        byte[] pdfBytes = transactionService.generatePDF();
+    @GetMapping("/accountTransactions/{id}/download/pdf")
+    public void downloadTransactionsPDF(@PathVariable("id") Long id,
+                                        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                        HttpServletResponse response) throws IOException {
+        String accountNumber=accountService.getById(id).getAccountNumber();
+        List<Transaction> transactionDebit=transactionService.getAllTransactionsByDebitIdBetweenDate(id,startDate,endDate);
+        List<Transaction> transactionCredit=transactionService.getAllTransactionsByCreditIdBetweenDate(accountNumber,startDate,endDate);
+        byte[] pdfBytes = transactionService.generatePDF(transactionDebit, transactionCredit);
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=transactions.pdf");
         response.getOutputStream().write(pdfBytes);
     }
 
-    @GetMapping("/download/csv")
-    public void downloadTransactionsCSV(HttpServletResponse response) throws IOException {
-        byte[] csvBytes = transactionService.generateCSV();
+    @GetMapping("/accountTransactions/{id}/download/csv")
+    public void downloadTransactionsCSV(@PathVariable("id") Long id,
+                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+                                        HttpServletResponse response) throws IOException {
+        String accountNumber=accountService.getById(id).getAccountNumber();
+        List<Transaction> transactionDebit=transactionService.getAllTransactionsByDebitIdBetweenDate(id,startDate,endDate);
+        List<Transaction> transactionCredit=transactionService.getAllTransactionsByCreditIdBetweenDate(accountNumber,startDate,endDate);
+        byte[] csvBytes = transactionService.generateCSV(transactionDebit, transactionCredit);
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=transactions.csv");
         response.getOutputStream().write(csvBytes);
     }
+
+
+
 }

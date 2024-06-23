@@ -4,19 +4,26 @@
 <html>
 <head>
     <title>User Accounts</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 </head>
-<body>
-<table class="table table-striped">
+<body style="background-color: #183c7c">
+<jsp:include page="navbar.jsp" />
+
+<table class="table table-striped border w-75 mt-5 mx-auto bd-white p-5" style="border-color: #f4ba20!important;border-width: 12px!important;">
     <thead>
     <tr>
-        <th scope="col">Account Number</th>
+        <th class="px-4" >Account Number</th>
+        <th></th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
     <c:forEach items="${accounts}" var="account">
     <tr>
 
-        <td><c:out value="${account.accountNumber}"/></td>
+        <td class="fs-5 px-4 fw-medium"><c:out value="${account.accountNumber}"/></td>
         <td>
         <a href="/account/${account.id}/details">Get Account Details</a> </td>
         <td>
@@ -29,5 +36,8 @@
 
     </tbody>
 </table>
+<footer>
+    <jsp:include page="footer.jsp"/>
+</footer>
 </body>
 </html>

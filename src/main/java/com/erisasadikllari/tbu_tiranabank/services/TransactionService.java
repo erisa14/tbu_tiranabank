@@ -123,8 +123,8 @@ public class TransactionService {
 //            }
 //        }
 //    }
-public byte[] generatePDF() throws IOException {
-    List<Transaction> transactions = transactionRepository.findAll(); // Adjust based on your repository method
+
+public byte[] generatePDF(List<Transaction> debitTransactions, List<Transaction> creditTransactions) throws IOException {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     PDDocument pdfDocument = new PDDocument();
@@ -139,17 +139,21 @@ public byte[] generatePDF() throws IOException {
         float margin = 20;
         float yStart = page.getMediaBox().getHeight() - margin;
         float yPosition = yStart;
-        float bottomMargin = 70;
         float cellMargin = 10f;
         float fontSize = 12f;
 
         float tableWidth = page.getMediaBox().getWidth() - 2 * margin;
-        float[] columnWidths = {tableWidth * 0.20f, tableWidth * 0.25f, tableWidth * 0.2f, tableWidth * 0.2f, tableWidth * 0.15f};
+        float[] columnWidths = {tableWidth * 0.2f, tableWidth * 0.25f, tableWidth * 0.2f, tableWidth * 0.2f, tableWidth * 0.15f};
 
         drawTableHeader(contentStream, yPosition, margin, fontSize, columnWidths);
         yPosition -= fontSize + cellMargin;
 
-        for (Transaction transaction : transactions) {
+        for (Transaction transaction : debitTransactions) {
+            drawTableRow(contentStream, transaction, yPosition, margin, fontSize, columnWidths);
+            yPosition -= fontSize + cellMargin;
+        }
+
+        for (Transaction transaction : creditTransactions) {
             drawTableRow(contentStream, transaction, yPosition, margin, fontSize, columnWidths);
             yPosition -= fontSize + cellMargin;
         }
@@ -191,17 +195,16 @@ public byte[] generatePDF() throws IOException {
         contentStream.setFont(PDType1Font.HELVETICA, fontSize);
 
         float rowHeight = fontSize + 2;
-        int maxRowsPerCell = 10;
-
         float currentY = yPosition;
         float currentX = margin;
 
         String[] rowData = {
-                String.valueOf(transaction.getTransactionDate()),
-                String.valueOf(transaction.getDescription()),
-                String.valueOf(transaction.getDebitAccount().getAccountNumber()),
-                String.valueOf(transaction.getCreditAccount()),
-                String.valueOf(transaction.getAmount())
+                transaction.getTransactionDate().getDate()+"/"+(transaction.getTransactionDate().getMonth()+1)+"/"+(transaction.getTransactionDate().getYear()+1900),
+                transaction.getDescription(),
+                transaction.getDebitAccount().getAccountNumber(),
+                transaction.getCreditAccount(),
+                (transaction.getAmount() )+ " "+
+                (transaction.getDebitAccount().getCurrency())
         };
 
         for (int i = 0; i < rowData.length; i++) {
@@ -251,8 +254,7 @@ public byte[] generatePDF() throws IOException {
 
         return lines;
     }
-    public byte[] generateCSV() throws IOException {
-        List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
+    public byte[] generateCSV(List<Transaction> debitTransactions, List<Transaction> creditTransactions) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              OutputStreamWriter writer = new OutputStreamWriter(baos)) {
 
@@ -262,13 +264,20 @@ public byte[] generatePDF() throws IOException {
             writer.append(" Credit Account  ");
             writer.append("Amount\n");
 
-            for (Transaction transaction : transactions) {
-                writer.append(String.valueOf(transaction.getTransactionDate())).append(",");
+            for (Transaction transaction : debitTransactions) {
+                writer.append(transaction.getTransactionDate().getDate()+"/"+(transaction.getTransactionDate().getMonth()+1)+"/"+(transaction.getTransactionDate().getYear()+1900)).append(",");
                 writer.append(String.valueOf(transaction.getDescription())).append(",");
                 writer.append(String.valueOf(transaction.getDebitAccount().getAccountNumber())).append(",");
                 writer.append(String.valueOf(transaction.getCreditAccount())).append(",");
-                writer.append(String.valueOf(transaction.getAmount())).append(",");
-                writer.append("\n");
+                writer.append(String.valueOf(transaction.getAmount())).append("\n");
+            }
+
+            for (Transaction transaction : creditTransactions) {
+                writer.append(transaction.getTransactionDate().getDate()+"/"+(transaction.getTransactionDate().getMonth()+1)+"/"+(transaction.getTransactionDate().getYear()+1900)).append(",");
+                writer.append(String.valueOf(transaction.getDescription())).append(",");
+                writer.append(String.valueOf(transaction.getDebitAccount().getAccountNumber())).append(",");
+                writer.append(String.valueOf(transaction.getCreditAccount())).append(",");
+                writer.append(String.valueOf(transaction.getAmount())).append("\n");
             }
             writer.flush();
             return baos.toByteArray();
