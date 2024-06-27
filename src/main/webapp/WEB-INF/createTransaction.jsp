@@ -9,14 +9,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet"></head>
-<body  style="background-color: #183c7c" class="mx-auto">
+<body  style="background-color: #183c7c;" class="mx-auto">
 <jsp:include page="navbar.jsp" />
 
 
 <c:if test="${not empty transactionError}">
     <p style="color: red;">${transactionError}</p>
 </c:if>
-<form:form modelAttribute="newTransaction" action="/createTransaction" method="post" class="form gap-3 d-flex flex-column mx-auto mt-5 bd-white p-5 border" style="border-color: #f4ba20!important;border-width: 12px!important; width:60%;">
+<form:form modelAttribute="newTransaction" action="/createTransaction" method="post" class="form gap-3 d-flex flex-column mx-auto mt-5 bd-white p-5 border rounded" style="border-color: #f4ba20!important;border-width: 12px!important; width:60%;">
     <c:if test="${!empty errors}">
         <ul style="color: red;">
             <c:forEach items="${errors.allErrors}" var="error">

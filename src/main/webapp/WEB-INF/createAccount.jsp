@@ -12,7 +12,7 @@
 <body  style="background-color: #183c7c" class="mx-auto">
 <jsp:include page="navbar.jsp" />
 
-<form:form modelAttribute="newAccount" action="/createAccount" method="post" class="form mt-5 gap-3 d-flex flex-column mx-auto bd-white p-5 border" style="border-color: #f4ba20!important;border-width: 12px!important; width:60%;">
+<form:form modelAttribute="newAccount" action="/createAccount" method="post" class="form mt-5 gap-3 d-flex flex-column mx-auto bd-white p-5 border rounded" style="border-color: #f4ba20!important;border-width: 12px!important; width:60%;">
     <div class="d-flex gap-4 justify-content-center align-items-center gap-2">
         <form:errors path="account_type" class="errors text-danger"/>
         <form:label path="account_type" class="col-2 fs-5">Account Type:</form:label>

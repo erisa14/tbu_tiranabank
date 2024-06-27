@@ -12,16 +12,17 @@
   <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 </head>
 <body class="mx-auto container-sm" style="background-color: #021c4f">
-<div class="mt-5">
-  <div class="d-flex ">
-    <a class="btn text-dark btn-lg" style="background-color: #f4ba20"  role="button" id="loginLink">
+<div class="mt-5 rounded" style="background: rgb(2,28,79);
+background: linear-gradient(180deg, rgba(2,28,79,1) 0%, rgba(244,186,32,1) 100%); width: 40%">
+  <div class="d-flex pt-5 justify-content-center gap-2 ">
+    <a class="btn text-light btn-lg" style="background-color: #f4ba20"  role="button" id="loginLink">
       Login
     </a>
-    <a class="btn btn-lg text-dark" style="background-color: ghostwhite" role="button" id="registerLink">
+    <a class="btn btn-lg text-light" style="background-color: #f4ba20" role="button" id="registerLink">
       Register
     </a>
   </div>
-    <div class="p-5 collapse rounded" style="width: 40%" id="collapseRegister">
+    <div class="p-5 collapse rounded"  id="collapseRegister">
       <h3 class="text-light">Register</h3>
       <form:form modelAttribute="newCustomer" action="/register" method="post" class="form gap-3 d-flex flex-column">
         <div class="form-floating d-flex flex-column justify-content-center align-items-center gap-2">
@@ -58,10 +59,10 @@
       </form:form>
     </div>
 
-    </div>
 
 
-    <div class="p-5 rounded" style="width: 40%" id="collapseLogin">
+
+    <div class="p-5 " id="collapseLogin">
       <h3 class="text-light">Login</h3>
       <form:form modelAttribute="newLogin" action="/login" method="post" class="form gap-3 d-flex flex-column">
         <div class="form-floating d-flex flex-column justify-content-center align-items-center gap-2">
@@ -77,6 +78,7 @@
         <input class="col-5 btn btn-primary" type="submit" value="Submit">
       </form:form>
     </div>
+</div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var loginCollapse = new bootstrap.Collapse(document.getElementById('collapseLogin'), {

@@ -10,7 +10,7 @@
 </head>
 <body style="background-color: #183c7c">
 <jsp:include page="navbar.jsp" />
-
+<div class="content">
 <table class="table table-striped border w-75 mt-5 mx-auto bd-white p-5" style="border-color: #f4ba20!important;border-width: 12px!important;">
     <thead>
     <tr>
@@ -36,6 +36,7 @@
 
     </tbody>
 </table>
+</div>
 <footer>
     <jsp:include page="footer.jsp"/>
 </footer>

@@ -1,10 +1,7 @@
 package com.erisasadikllari.tbu_tiranabank.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,6 +29,7 @@ public class Transaction {
     private String description;
 
     @NotNull
+    @Min(0)
     private double amount;
 
     @Column(updatable = false)
