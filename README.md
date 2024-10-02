@@ -1,3 +1,5 @@
+Statement of Account Generation 
+Technologies: Java Spring Boot, MySQL, JSP, CSS, Bootstrap, JavaScript
 • Developed a Customer Account Management System that allows users to register securely and access their 
 accounts. The system features a dashboard where customers can view their accounts, make new transactions, 
 and generate detailed statements by selecting specific date ranges for their transaction lists.
